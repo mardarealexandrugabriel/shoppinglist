@@ -1,12 +1,33 @@
 <?php
     require_once('core/init.php');
-    $prod = new Product();
-    try
+$action = "GetProductListByName";
+    switch($action)
     {
-        $prod->GetProductByName("Product2");
+        case "GetProductListByName":
+            $productlist = array();
+            try
+            {
+                $productlist = Controls::GetProductListByName("Product");
+            }
+            catch(Exception $ex)
+            {
+                die($ex->getMessage());
+            }
+            echo "<pre>";
+            print_r($productlist);
+            echo "</pre>";
+        break;
+
+        case "actiune2":
+        break;
+        case "actiune3":
+        break;
+        case "actiune4":
+        break;
+        case "actiune5":
+        break;
+
     }
-    catch(Exception $ex){
-        die($ex->getMessage());
-    }
-    echo json_encode($prod->ProductToArray());
+
+    
 ?>
