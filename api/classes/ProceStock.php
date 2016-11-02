@@ -35,27 +35,27 @@ class PriceStock{
     {
        $this->_enterdate = $enterdate; 
     }
-    public function GetId($id = null)
+    public function GetId()
     {
         return $this->_id; 
     }
-    public function GetLocationId($locationid= null)
+    public function GetLocationId()
     {
        return $this->_locationid= $locationid; 
     }
-    public function GetProductId($productid = null)
+    public function GetProductId()
     {
        return $this->_productid = $productid; 
     }
-    public function GetPrice($price = null)
+    public function GetPrice()
     {
         return $this->_price = $price; 
     }
-    public function GetStock($stock = null)
+    public function GetStock()
     {
        return $this->_stock = $stock; 
     }
-    public function GetEnterDate($enterdate = null)
+    public function GetEnterDate()
     {
        return $this->_enterdate = $enterdate; 
     }
