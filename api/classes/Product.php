@@ -5,13 +5,10 @@ class Product{
     private $_description;
     private $_addedby;
     private $_enterdate;
-    public function __construct($id=null, $name=null, $description=null, $addedby=null, $enterdate=null)
+    private $_db;
+    public function __construct()
     {
-        $this->_id = $id;
-        $this->_name = $name;
-        $this->_description = $description;
-        $this->_addedby = $addedby;
-        $this->_enterdate = $enterdate;
+       $this->_db = DB::getInstance();
     }
     public function SetId($id = null)
     {
@@ -53,13 +50,14 @@ class Product{
     {
        return $this->_enterdate; 
     }
-    private function SetAttributesFromDB($DBArray = array())
+    private function SetAttributesFromDB($DBArray)
     {
-        $this->SetId($DBArray->pid);
-        $this->SetName($DBArray->name);
-        $this->SetDescription($DBArray->p_description);
-        $this->SetAddedBy($DBArray->p_addedby);
-        $this->SetEnterDate($DBArray->p_enterdate);
+        
+        $this->SetId($DBArray->ProductId);
+        $this->SetName($DBArray->ProductName);
+        $this->SetDescription($DBArray->ProductDescription);
+        $this->SetAddedBy($DBArray->ProductAddedBy);
+        $this->SetEnterDate($DBArray->ProductEnterDate);
     }
     public function ProductToArray()
     {
@@ -68,8 +66,51 @@ class Product{
         $ret_arr["ProductName"] = $this->GetName();
         $ret_arr["ProductDescription"] = $this->GetDescription();
         $ret_arr["ProductAddedBy"] = $this->GetAddedBy();
-        $ret_arr["EnterDate"] = $this->GetEnterDate();
+        $ret_arr["ProductEnterDate"] = $this->GetEnterDate();
         return $ret_arr;
-        
+    }
+    public function AddANewProduct()
+    {
+        $params = $this->ProductToArray();
+        if(!$this->_db->insert('products', $params))
+        {
+            throw new Exception("There was a problem inserting the product");
+        }
+    }
+    public function GetProductById($id)
+    {
+        if(!$this->_db->get('products', array('ProductId', '=', $id)))
+        {
+            throw new Exception("There was a problem selecting the product");
+        }
+        else
+        {
+            if(!$this->_db->count())
+            {
+                throw new Exception("No produduct with id : ".escape($id));
+            }
+            else
+            {
+                $this->SetAttributesFromDB($this->_db->first());           
+            }
+        }
+    }
+    public function GetProductByName($name)
+    {
+        if(!$this->_db->get('products', array('ProductName', 'LIKE', '%'.$name.'%')))
+        {
+            throw new Exception("There was a problem selecting the product");
+        }
+        else
+        {
+            if(!$this->_db->count())
+            {
+                throw new Exception("No produduct with name : ".escape($name));
+            }
+            else
+            {
+                $this->SetAttributesFromDB($this->_db->first());           
+            }
+        }
     }
 }

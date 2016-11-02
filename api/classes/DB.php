@@ -30,12 +30,13 @@ class DB{
                    $x++;
                }
            }
-          
+          //print_r($this->_query);
            if($this->_query->execute()){
                $this->_results = $this->_query->fetchAll(PDO::FETCH_OBJ);
                $this->_count = $this->_query->rowCount();
            }
            else{
+               //print_r($this_query->errorInfo());
                $this->_error=true;
            }
         }
@@ -44,13 +45,14 @@ class DB{
     public function action($action, $table, $where=array()){
         if(count($where) === 3)
         {
-            $operators = array('=', '<', ">", ">=", "<=");
-            
+            $operators = array('=', '<', ">", ">=", "<=", "LIKE");
             $field = $where[0];
             $operator = $where[1];
             $value = $where[2];
+            $sql = "";
             if(in_array($operator, $operators))
             {
+               
                 $sql = "{$action} FROM {$table} WHERE {$field} {$operator} ?";
                 if(!$this->query($sql, array($value))->error()){
                     return $this;
