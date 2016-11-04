@@ -6,6 +6,7 @@ class Product{
     private $_addedby;
     private $_enterdate;
     private $_db;
+
     public function __construct()
     {
        $this->_db = DB::getInstance();
@@ -72,9 +73,18 @@ class Product{
     public function AddANewProduct()
     {
         $params = $this->ProductToArray();
-        if(!$this->_db->insert('products', $params))
+        $existresult = $this->_db->get('products', array("ProductName", "=", $this->GetName()));
+        if($this->_db->count() != 0)
         {
-            throw new Exception("There was a problem inserting the product");
+            throw new Exception("That product already exists");
+        }
+        else
+        {
+            if(!$this->_db->insert('products', $params))
+            {
+                throw new Exception("There was a problem inserting the product");
+            }
+
         }
     }
     public function GetProductById($id)
@@ -85,13 +95,10 @@ class Product{
         }
         else
         {
-            if(!$this->_db->count())
+            if($this->_db->count())
             {
-                throw new Exception("No produduct with id : ".escape($id));
-            }
-            else
-            {
-                $this->SetAttributesFromDB($this->_db->first());           
+                $this->SetAttributesFromDB($this->_db->first());    
+                $this->SetProductExists(true);       
             }
         }
     }
@@ -103,15 +110,17 @@ class Product{
         }
         else
         {
-            if(!$this->_db->count())
+            if($this->_db->count())
             {
-                throw new Exception("No produduct with name : ".escape($name));
-            }
-            else
-            {
-                $this->SetAttributesFromDB($this->_db->first());           
+                $this->SetAttributesFromDB($this->_db->first()); 
+                $this->SetProductExists(true);
             }
         }
+    }
+   
+    public function CheckIfProductExists($name)
+    {
+    
     }
    
 }

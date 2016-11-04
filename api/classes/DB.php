@@ -36,7 +36,7 @@ class DB{
                $this->_count = $this->_query->rowCount();
            }
            else{
-               //print_r($this_query->errorInfo());
+               //print_r($this->_query->errorInfo());
                $this->_error=true;
            }
         }

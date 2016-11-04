@@ -52,7 +52,6 @@ class Company{
     }
     private function SetAttributesFromDB($DBArray)
     {
-        
         $this->SetId($DBArray->CompanyId);
         $this->SetName($DBArray->CompanyName);
         $this->SetUsername($DBArray->ComapnyUsername);
@@ -72,9 +71,28 @@ class Company{
     public function AddANewCompany()
     {
         $params = $this->CompanyToArray();
-        if(!$this->_db->insert('companies', $params))
+        $this->_db->get('companies', array("CompanyName", "=", $this->GetName()));
+        if($this->_db->count() != 0)
         {
-            throw new Exception("There was a problem inserting the company");
+            throw new Exception("Company with that name already exists");
+        }
+        else
+        {
+            $this->_db = DB::getInstance();
+            $this->_db->get('companies', array("ComapnyUsername", "=", $this->GetUserName()));
+            if($this->_db->count() != 0)
+            {
+                throw new Exception("Company with that username already exists");
+            }
+            else
+            {            
+                $params = $this->CompanyToArray();
+                $this->_db = DB::getInstance();
+                if(!$this->_db->insert('companies', $params))
+                {
+                    throw new Exception("There was a problem inserting the company");
+                }
+            }
         }
     }
 }

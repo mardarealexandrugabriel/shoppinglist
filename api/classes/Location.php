@@ -56,29 +56,39 @@ class Location
     //Other methods
     private function SetAttributesFromDB($DBArray)
     {
-        
         $this->SetId($DBArray->LocationId);
         $this->SetCompanyId($DBArray->company_id);
         $this->SetAddress($DBArray->LocationAdress);
         $this->SetLat($DBArray->LocationLat);
         $this->SetLng($DBArray->LocationLng);
     }
-    public function LocationStockToArray()
+    public function LocationToArray()
     {
         $ret_arr = array();
         $ret_arr["LocationId"] = $this->GetId();
-        $ret_arr["company_id"] = $this->GetLocationId();
+        $ret_arr["company_id"] = $this->GetCompanyId();
         $ret_arr["LocationAdress"] = $this->GetAddress();
         $ret_arr["LocationLat"] = $this->GetLat();
         $ret_arr["LocationLng"] = $this->GetLng();
         return $ret_arr;
     }
-    public function AddANewPriceStock()
+    public function AddANewLocation()
     {
-        $params = $this->PriceStockToArray();
-        if(!$this->_db->insert('locations', $params))
+        
+
+        $params = $this->LocationToArray();
+        $this->_db->query("SELECT * FROM locations WHERE `company_id` = ? AND `LocationLat` = ? AND `LocationLng` = ?", array($this->GetCompanyId(), $this->GetLat(), $this->GetLng()));
+        //print_r($this->_db);
+        if($this->_db->count() != 0)
         {
-            throw new Exception("There was a problem inserting the company");
+             throw new Exception("Location with that Latitude and Longitude already exists");
+        }
+        else
+        {
+            if(!$this->_db->insert('locations', $params))
+            {
+                throw new Exception("There was a problem inserting the company");
+            }
         }
     }
 }

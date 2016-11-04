@@ -61,7 +61,6 @@ class PriceStock{
     }
     private function SetAttributesFromDB($DBArray)
     {
-        
         $this->SetId($DBArray->PriceStockId);
         $this->SetLocationId($DBArray->location_id);
         $this->SetProductId($DBArray->product_id);
