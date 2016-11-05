@@ -3,9 +3,9 @@ session_start();
 
 $GLOBALS['config'] = array(
     'mysql'     => array(
-        'host'          => 'localhost',
-        'username'      => 'root',
-        'password'      => '',
+        'host'          => 'mysql.hostinger.ro',
+        'username'      => 'u956180736_user',
+        'password'      => 'parolauser',
         'db'            => 'u956180736_shopp'
     ),
     'remember'  => array(

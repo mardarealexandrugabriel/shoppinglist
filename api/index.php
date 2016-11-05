@@ -1,21 +1,23 @@
 <?php
     require_once('core/init.php');
-$action = "AddANewLocation";
+    $action = Input::get("action");
+    header('Content-Type: application/json');
+    header('Access-Control-Allow-Origin: *');
+    error_reporting(E_ALL);
     switch($action)
     {
         case "GetProductListByName":
             $productlist = array();
             try
             {
-                $productlist = Controls::GetProductListByName("Produ");
+                $pname = Input::get("ProductName");
+                $productlist = Controls::GetProductListByName($pname);
             }
             catch(Exception $ex)
             {
                 die($ex->getMessage());
             }
-            echo "<pre>";
-                print_r($productlist);
-            echo "</pre>";
+                echo json_encode($productlist);
         break;
 
         case "AddANewProduct":

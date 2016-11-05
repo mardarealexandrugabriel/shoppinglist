@@ -16,7 +16,7 @@ class Controls{
             }
             else
             {
-                        
+                return $db->results();
             }
         }
     }
