@@ -4,6 +4,7 @@ class Location
     private $_id;
     private $_companyid;
     private $_address;
+    private $_name;
     private $_lat;
     private $_lng;
     private $_db;
@@ -19,6 +20,10 @@ class Location
     public function SetCompanyId($companyid = null)
     {
        $this->_companyid = $companyid; 
+    }
+    public function SetName($name = null)
+    {
+       $this->_name = $name; 
     }
     public function SetAddress($address = null)
     {
@@ -41,6 +46,10 @@ class Location
     {
        return $this->_companyid; 
     }
+    public function GetName()
+    {
+       return $this->_name; 
+    }
     public function GetAddress()
     {
        return $this->_address; 
@@ -58,6 +67,7 @@ class Location
     {
         $this->SetId($DBArray->LocationId);
         $this->SetCompanyId($DBArray->company_id);
+        $this->SetName($DBArray->LocationName);
         $this->SetAddress($DBArray->LocationAdress);
         $this->SetLat($DBArray->LocationLat);
         $this->SetLng($DBArray->LocationLng);
@@ -67,6 +77,7 @@ class Location
         $ret_arr = array();
         $ret_arr["LocationId"] = $this->GetId();
         $ret_arr["company_id"] = $this->GetCompanyId();
+        $ret_arr["LocationName"] = $this->GetName();
         $ret_arr["LocationAdress"] = $this->GetAddress();
         $ret_arr["LocationLat"] = $this->GetLat();
         $ret_arr["LocationLng"] = $this->GetLng();
@@ -74,14 +85,12 @@ class Location
     }
     public function AddANewLocation()
     {
-        
-
         $params = $this->LocationToArray();
-        $this->_db->query("SELECT * FROM locations WHERE `company_id` = ? AND `LocationLat` = ? AND `LocationLng` = ?", array($this->GetCompanyId(), $this->GetLat(), $this->GetLng()));
+        $this->_db->query("SELECT * FROM locations WHERE `company_id` = ? AND ((`LocationLat` = ? AND `LocationLng` = ?) OR `LocationName` = ? )", array($this->GetCompanyId(), $this->GetLat(), $this->GetLng(), $this->GetName()));
         //print_r($this->_db);
         if($this->_db->count() != 0)
         {
-             throw new Exception("Location with that Latitude and Longitude already exists");
+             throw new Exception("Location with that Name or Latitude and Longitude already exists");
         }
         else
         {

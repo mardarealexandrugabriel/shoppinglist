@@ -1,7 +1,8 @@
 <?php
     require_once('core/init.php');
+
     $action = Input::get("action");
-    header('Content-Type: application/json');
+    //header('Content-Type: application/json');
     header('Access-Control-Allow-Origin: *');
     error_reporting(E_ALL);
     switch($action)
@@ -52,17 +53,33 @@
             }
         break;
         
-        
-        
+                
         case "AddANewLocation":
             $location = new Location();
             $location -> SetCompanyId("102");
-            $location -> SetAddress("Str.PEtru asdf");
-            $location -> SetLat(21.256);
-            $location -> SetLng(45.268);
+            $location -> SetAddress("Str.PEtrus asdf");
+            $location -> SetName("Nume locatisoe 1");
+            $location -> SetLat(21.2526);
+            $location -> SetLng(45.2268);
             try
             {
                 $location -> AddANewLocation();
+            }
+            catch(Exception $ex)
+            {
+                die($ex->getMessage());
+            }
+        break;
+
+        case "AddANewUser":
+
+            $user = new User();
+            $user->SetName("Nume user 1");
+            $user->SetUsername("username1");
+            $user->SetPassword("password1");
+            try
+            {
+                  $user->AddANewUser();
             }
             catch(Exception $ex)
             {

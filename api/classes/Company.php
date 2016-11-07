@@ -2,8 +2,6 @@
 class Company{
     private $_id;
     private $_name;
-    private $_username;
-    private $_password;
     private $_enterdate;
     private $_db;
     public function __construct()
@@ -18,14 +16,6 @@ class Company{
     {
        $this->_name = $name; 
     }
-    public function SetUsername($username = null)
-    {
-       $this->_username = $username; 
-    }
-    public function SetPassword($password = null)
-    {
-       $this->_password = $password; 
-    }
     public function SetEnterDate($enterdate = null)
     {
        $this->_enterdate = $enterdate; 
@@ -38,14 +28,6 @@ class Company{
     {
        return $this->_name; 
     }
-    public function GetUsername()
-    {
-       return $this->_username; 
-    }
-    public function GetPassword()
-    {
-       return $this->_password; 
-    }
     public function GetEnterDate()
     {
        return $this->_enterdate; 
@@ -54,8 +36,6 @@ class Company{
     {
         $this->SetId($DBArray->CompanyId);
         $this->SetName($DBArray->CompanyName);
-        $this->SetUsername($DBArray->ComapnyUsername);
-        $this->SetPassword($DBArray->ComapnyPassword);
         $this->SetEnterDate($DBArray->CompanyEnterDate);
     }
     public function CompanyToArray()
@@ -63,8 +43,6 @@ class Company{
         $ret_arr = array();
         $ret_arr["CompanyId"] = $this->GetId();
         $ret_arr["CompanyName"] = $this->GetName();
-        $ret_arr["ComapnyUsername"] = $this->GetUsername();
-        $ret_arr["ComapnyPassword"] = $this->GetPassword();
         $ret_arr["CompanyEnterDate"] = $this->GetEnterDate();
         return $ret_arr;
     }
