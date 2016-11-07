@@ -20,6 +20,27 @@ class Controls{
             }
         }
     }
+    public static function GetLocatiosListByCompanyId($company_id)
+    {
+        $db = DB::getInstance()->get('locations', array('company_id', '=', $company_id));
+        $result = array();
+        if($db->error())
+        {
+            throw new Exception("There was a problem selecting the cpmany list");
+        }
+        else
+        {
+            foreach($db->results() as $row)
+            {
+                $location = new Location();
+                $location->SetAttributesFromDB($row);
+                array_push($result, $location->LocationToArray());
+            }
+           
+        }
+        return $result;
+        
+    }
     
 }
 ?>

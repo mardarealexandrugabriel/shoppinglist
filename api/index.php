@@ -20,7 +20,7 @@
             }
                 echo json_encode($productlist);
         break;
-
+        
         case "AddANewProduct":
             $product = new Product();
             $product -> SetName("Produs2-a");
@@ -109,7 +109,15 @@
                 die($ex->getMessage());
             }
         break;
-        
+        case "GetProducListByCompanyId":
+            $productlist = array();
+            $company_id = Input::get("CompanyId");
+            $productlist = Controls::GetLocatiosListByCompanyId($company_id);
+            echo json_encode($productlist);
+          
+            
+        break;
+
         
         
         case "actiune5":

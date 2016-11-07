@@ -63,7 +63,7 @@ class Location
        return $this->_lng; 
     }
     //Other methods
-    private function SetAttributesFromDB($DBArray)
+    public function SetAttributesFromDB($DBArray)
     {
         $this->SetId($DBArray->LocationId);
         $this->SetCompanyId($DBArray->company_id);
