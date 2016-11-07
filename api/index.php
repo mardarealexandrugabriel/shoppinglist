@@ -2,7 +2,7 @@
     require_once('core/init.php');
 
     $action = Input::get("action");
-    //header('Content-Type: application/json');
+    header('Content-Type: application/json');
     header('Access-Control-Allow-Origin: *');
     error_reporting(E_ALL);
     switch($action)
@@ -29,6 +29,29 @@
             try
             {
                 $product->AddANewProduct();
+
+            }
+            catch(Exception $ex)
+            {
+                die($ex->getMessage());
+            }
+        break;
+        case "AddANewPriceStock":
+            $pricestock = new PriceStock();
+            if(Input::get("location_id") != "")
+            {
+                $pricestock->SetLocationId(Input::get("location_id"));
+            }
+            else
+            {
+                $pricestock->SetLocationId("1");
+            }
+            $pricestock->SetProductId(Input::get("product_id"));
+            $pricestock->SetPrice(Input::get("Price"));
+            $pricestock->SetStock(Input::get("Stock"));
+            try
+            {
+                $pricestock->AddANewPriceStock();
 
             }
             catch(Exception $ex)

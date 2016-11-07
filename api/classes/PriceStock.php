@@ -41,23 +41,23 @@ class PriceStock{
     }
     public function GetLocationId()
     {
-       return $this->_locationid= $locationid; 
+       return $this->_locationid; 
     }
     public function GetProductId()
     {
-       return $this->_productid = $productid; 
+       return $this->_productid; 
     }
     public function GetPrice()
     {
-        return $this->_price = $price; 
+        return $this->_price; 
     }
     public function GetStock()
     {
-       return $this->_stock = $stock; 
+       return $this->_stock; 
     }
     public function GetEnterDate()
     {
-       return $this->_enterdate = $enterdate; 
+       return $this->_enterdate; 
     }
     private function SetAttributesFromDB($DBArray)
     {
@@ -84,7 +84,7 @@ class PriceStock{
         $params = $this->PriceStockToArray();
         if(!$this->_db->insert('priceandstock', $params))
         {
-            throw new Exception("There was a problem inserting the company");
+            throw new Exception("There was a problem inserting the and the stock");
         }
     }
 
