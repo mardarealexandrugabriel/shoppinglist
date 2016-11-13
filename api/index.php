@@ -1,6 +1,6 @@
 <?php
     require_once('core/init.php');
-
+    //test
     $action = Input::get("action");
     header('Content-Type: application/json');
     header('Access-Control-Allow-Origin: *');
