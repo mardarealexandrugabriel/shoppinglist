@@ -23,8 +23,8 @@
         
         case "AddANewProduct":
             $product = new Product();
-            $product -> SetName("Produs2-a");
-            $product -> SetDescription("Produs2 adaugat din aplicatie");
+            $product -> SetName(Input::get("ProductName"));
+            $product -> SetDescription(Input::get("ProductDescription"));
             $product -> SetAddedBy ("1");
             try
             {
@@ -79,11 +79,11 @@
                 
         case "AddANewLocation":
             $location = new Location();
-            $location -> SetCompanyId("102");
-            $location -> SetAddress("Str.PEtrus asdf");
-            $location -> SetName("Nume locatisoe 1");
-            $location -> SetLat(21.2526);
-            $location -> SetLng(45.2268);
+            $location -> SetCompanyId("1");
+            $location -> SetAddress(Input::get("LocationAdress"));
+            $location -> SetName(Input::get("LocationName"));
+            $location -> SetLat(Input::get("LocationLat"));
+            $location -> SetLng(Input::get("LocationLng"));
             try
             {
                 $location -> AddANewLocation();
@@ -109,11 +109,11 @@
                 die($ex->getMessage());
             }
         break;
-        case "GetProducListByCompanyId":
-            $productlist = array();
+        case "GetLocationsListByCompanyId":
+            $locationlist = array();
             $company_id = Input::get("CompanyId");
-            $productlist = Controls::GetLocatiosListByCompanyId($company_id);
-            echo json_encode($productlist);
+            $locationlist = Controls::GetLocatiosListByCompanyId($company_id);
+            echo json_encode($locationlist);
           
             
         break;
