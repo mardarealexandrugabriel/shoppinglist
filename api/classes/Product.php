@@ -51,7 +51,7 @@ class Product{
     {
        return $this->_enterdate; 
     }
-    private function SetAttributesFromDB($DBArray)
+    public function SetAttributesFromDB($DBArray)
     {
         
         $this->SetId($DBArray->ProductId);

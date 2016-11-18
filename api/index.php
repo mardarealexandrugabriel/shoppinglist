@@ -114,12 +114,37 @@
             $company_id = Input::get("CompanyId");
             $locationlist = Controls::GetLocatiosListByCompanyId($company_id);
             echo json_encode($locationlist);
-          
-            
         break;
 
         
-        
+        case "GetProducListByLocationId":
+            $productlist = array();
+            $location_id = Input::get("LocationId");
+            try
+            {
+                  $productlist = Controls::GetProducListByLocationId($location_id);
+                  echo json_encode($productlist);
+            }
+            catch(Exception $ex)
+            {
+                die($ex->getMessage());
+            }
+
+        break;
+        case "GetPricesByProductIdLocationId":
+            $pricestocklist = array();
+            $location_id = Input::get("LocationId");
+            $product_id = Input::get("ProductId");
+            try
+            {
+                  $pricestocklist = Controls::GetPricesByProductIdLocationId($product_id,$location_id);
+                  echo json_encode($pricestocklist);
+            }
+            catch(Exception $ex)
+            {
+                die($ex->getMessage());
+            }
+        break;
         case "actiune5":
         break;
 
