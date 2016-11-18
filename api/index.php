@@ -145,7 +145,21 @@
                 die($ex->getMessage());
             }
         break;
-        case "actiune5":
+        case "GetProductPricesGeneral":
+            $generallist = array();
+            $product_id = Input::get("ProductId");
+            $lat = Input::get("Lat");
+            $lng = Input::get("Lng");
+            $maxdistance = Input::get("MaxDistance");
+            try
+            {
+                  $generallist = Controls::GetProductPricesGeneral($product_id, $lat, $lng, $maxdistance);
+                  echo json_encode($generallist);
+            }
+            catch(Exception $ex)
+            {
+                die($ex->getMessage());
+            }
         break;
 
     }
