@@ -2,7 +2,7 @@
     require_once('core/init.php');
     //test
     $action = Input::get("action");
-    header('Content-Type: application/json');
+   header('Content-Type: application/json');
     header('Access-Control-Allow-Origin: *');
     error_reporting(E_ALL);
     switch($action)
@@ -117,12 +117,12 @@
         break;
 
         
-        case "GetProducListByLocationId":
+        case "GetProductListByLocationId":
             $productlist = array();
             $location_id = Input::get("LocationId");
             try
             {
-                  $productlist = Controls::GetProducListByLocationId($location_id);
+                  $productlist = Controls::GetProductListByLocationId($location_id);
                   echo json_encode($productlist);
             }
             catch(Exception $ex)
@@ -151,10 +151,13 @@
             $lat = Input::get("Lat");
             $lng = Input::get("Lng");
             $maxdistance = Input::get("MaxDistance");
+            
             try
             {
                   $generallist = Controls::GetProductPricesGeneral($product_id, $lat, $lng, $maxdistance);
-                  echo json_encode($generallist);
+                  
+                   echo json_encode($generallist);
+    
             }
             catch(Exception $ex)
             {
