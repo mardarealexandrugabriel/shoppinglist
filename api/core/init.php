@@ -3,7 +3,7 @@ session_start();
 
 $GLOBALS['config'] = array(
     'mysql'     => array(
-        /* server
+        /* test server
         'host'          => 'mysql.hostinger.ro',
         'username'      => 'u956180736_user',
         'password'      => 'parolauser',
