@@ -164,6 +164,41 @@
                 die($ex->getMessage());
             }
         break;
+        case "AddAutomaticPriceStock":
+            $t = time();
+            $t = date("Y-m-d h-i-s",$t);
+            $t = str_replace("-","",$t);
+            $t = str_replace(" ","",$t);
+            $UploadFileName = $t.".json";
+            $UploadFilePath = "temp/".$UploadFileName;
+            move_uploaded_file($_FILES["H_VehicleKeyFile"]["tmp_name"], $UploadFilePath);
+            $structure = file_get_contents($UploadFilePath);
+            $data = json_decode($structure, true);
+            foreach($data as $lkey => $location)
+            {
+                foreach($location as $pkey => $product)
+                {
+                    $pricestock = new PriceStock();
+                    $pricestock->SetLocationId($lkey);
+                    $pricestock->SetProductId($pkey);
+                    $pricestock->SetPrice($product["Price"]);
+                    $pricestock->SetStock($product["Stock"]);
+                    try
+                    {
+                       $pricestock->AddANewPriceStock();
+                       //print_r($pricestock);
+                    }
+                    catch(Exception $ex)
+                    {
+                        unlink($UploadFilePath);
+                        die($ex->getMessage());
+                    }
+                }
+            }
+            unlink($UploadFilePath);
+          
+           // print_r($json_a);
+        break;
 
     }
 
