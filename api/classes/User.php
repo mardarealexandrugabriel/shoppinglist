@@ -6,6 +6,7 @@
         private $_name;
         private $_enterdate;
         private $_location_id;
+        private $_is_manager;
         private $_db;
         public function __construct()
         {
@@ -35,6 +36,10 @@
         {
             $this->_location_id = $location_id; 
         }
+        public function SetIsManager($is_manager = null)
+        {
+            $this->_is_manager = $is_manager; 
+        }
         public function GetId()
         {
             return $this->_id; 
@@ -59,7 +64,11 @@
         {
             return $this->_location_id; 
         }
-        private function SetAttributesFromDB($DBArray)
+        public function GetIsManager()
+        {
+            return $this->_is_manager; 
+        }
+        public function SetAttributesFromDB($DBArray)
         {
             $this->SetId($DBArray->UserId);
             $this->SetName($DBArray->UName);
@@ -67,6 +76,7 @@
             $this->SetPassword($DBArray->Password);
             $this->SetEnterDate($DBArray->UserEnterDate);
             $this->SetLocationId($DBArray->LocationId);
+            $this->SetIsManager($DBArray->IsManager);
         }
         public function UserToArray()
         {
@@ -77,12 +87,13 @@
             $ret_arr["Password"] = $this->GetPassword();
             $ret_arr["UserEnterDate"] = $this->GetEnterDate();
             $ret_arr["LocationId"] = $this->GetLocationId();
+            $ret_arr["IsManager"] = $this->GetIsManager();
             return $ret_arr;
         }
         public function AddANewUser()
         {
             $params = $this->UserToArray();
-            $this->_db->get('users', array("Username", "=", $this->GetName()));
+            $this->_db->get('users', array("Username", "=", $this->GetUserName()));
             if($this->_db->count() != 0)
             {
                 throw new Exception("Username already exists");

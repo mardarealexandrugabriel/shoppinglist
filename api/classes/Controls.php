@@ -173,8 +173,31 @@ class Controls{
         return $generalarray;
         
     }
-    
-    
-    
+    public static function Login($Username, $Password)
+    {
+        $db = DB::getInstance()->get('users', array("Username","=", $Username));
+        if($db->error())
+        {
+            throw new Exception("There was a problem selecting the user");
+        }
+        else
+        {
+            if(!$db->count())
+            {
+                throw new Exception("Invalid Username and Password");
+            }
+            else
+            {
+                $user = new User();
+                $user->SetAttributesFromDB($db->results()[0]);               
+                if($user->GetPassword() == md5($Password))
+                    return $user->UserToArray();
+                else
+                    throw new Exception("Invalid Username and Password");
+            }
+
+        }
+
+    }
 }
 ?>

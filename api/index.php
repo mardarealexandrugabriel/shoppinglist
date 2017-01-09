@@ -98,9 +98,17 @@
             $user = new User();
             $user->SetName(Input::get("Name"));
             $user->SetUsername(Input::get("Username"));
-            $user->SetPassword(Input::get("Password"));
+            $user->SetPassword(md5(Input::get("Password")));
             $user->SetLocationId(Input::get("LocationId"));
-
+            if(Input::get("IsManager") == "1")
+            {
+                $user->SetIsManager(Input::get("IsManager"));
+                $user->SetLocationId("0");
+            }
+            else
+            {
+                $user->SetIsManager("0");
+            }
             try
             {
                   $user->AddANewUser();
@@ -198,6 +206,37 @@
             }
             unlink($UploadFilePath);
         break;
+        case "Login":
+            $response = "";
+            $Username = Input::get("Username");
+            $Password = Input::get("Password");
+            try
+            {
+                  $response = Controls::Login($Username, $Password);
+                  $user = array();
+                  $user["Name"] = $response["UName"];
+                  $user["Username"] = $response["Username"];
+                  $user["LocationId"] = $response["LocationId"];
+                  $user["UserId"] = $response["UserId"];
+                  $user["IsManager"] = $response["IsManager"];
+                  $_SESSION["UserId"] =  $user["UserId"];
+                  $_SESSION["IsManager"] =  $user["IsManager"];
+                  echo json_encode($user);
+    
+            }
+            catch(Exception $ex)
+            {
+                session_destroy();
+                die($ex->getMessage());
+            }
+        break;
+        case "LogOut":
+           session_destroy();
+        break;
+        case "SessionTest":
+            echo $_SESSION["UserId"];
+        break;
+        
     
     }
 
