@@ -2,7 +2,7 @@
     require_once('core/init.php');
     //test
     $action = Input::get("action");
-   header('Content-Type: application/json');
+    header('Content-Type: application/json');
     header('Access-Control-Allow-Origin: *');
     error_reporting(E_ALL);
     switch($action)
@@ -151,7 +151,7 @@
             $lat = Input::get("Lat");
             $lng = Input::get("Lng");
             $maxdistance = Input::get("MaxDistance");
-            
+  
             try
             {
                   $generallist = Controls::GetProductPricesGeneral($product_id, $lat, $lng, $maxdistance);
