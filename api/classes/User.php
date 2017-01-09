@@ -5,6 +5,7 @@
         private $_password;
         private $_name;
         private $_enterdate;
+        private $_location_id;
         private $_db;
         public function __construct()
         {
@@ -30,6 +31,10 @@
         {
             $this->_enterdate = $enterdate; 
         }
+        public function SetLocationId($location_id = null)
+        {
+            $this->_location_id = $location_id; 
+        }
         public function GetId()
         {
             return $this->_id; 
@@ -50,6 +55,10 @@
         {
             return $this->_enterdate; 
         }
+        public function GetLocationId()
+        {
+            return $this->_location_id; 
+        }
         private function SetAttributesFromDB($DBArray)
         {
             $this->SetId($DBArray->UserId);
@@ -57,6 +66,7 @@
             $this->SetUsername($DBArray->Username);
             $this->SetPassword($DBArray->Password);
             $this->SetEnterDate($DBArray->UserEnterDate);
+            $this->SetLocationId($DBArray->LocationId);
         }
         public function UserToArray()
         {
@@ -66,6 +76,7 @@
             $ret_arr["Username"] = $this->GetUsername();
             $ret_arr["Password"] = $this->GetPassword();
             $ret_arr["UserEnterDate"] = $this->GetEnterDate();
+            $ret_arr["LocationId"] = $this->GetLocationId();
             return $ret_arr;
         }
         public function AddANewUser()
@@ -74,7 +85,7 @@
             $this->_db->get('users', array("Username", "=", $this->GetName()));
             if($this->_db->count() != 0)
             {
-                throw new Exception("Company with that name already exists");
+                throw new Exception("Username already exists");
             }
             else
             {

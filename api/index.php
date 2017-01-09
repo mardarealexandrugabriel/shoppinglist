@@ -95,11 +95,12 @@
         break;
 
         case "AddANewUser":
-
             $user = new User();
-            $user->SetName("Nume user 1");
-            $user->SetUsername("username1");
-            $user->SetPassword("password1");
+            $user->SetName(Input::get("Name"));
+            $user->SetUsername(Input::get("Username"));
+            $user->SetPassword(Input::get("Password"));
+            $user->SetLocationId(Input::get("LocationId"));
+
             try
             {
                   $user->AddANewUser();
@@ -196,10 +197,8 @@
                 }
             }
             unlink($UploadFilePath);
-          
-           // print_r($json_a);
         break;
-
+    
     }
 
     
