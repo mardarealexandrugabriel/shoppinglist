@@ -22,19 +22,47 @@
         break;
         
         case "AddANewProduct":
-            $product = new Product();
-            $product -> SetName(Input::get("ProductName"));
-            $product -> SetDescription(Input::get("ProductDescription"));
-            $product -> SetAddedBy ("1");
-            try
+            $results = array();
+            $results["Errors"] = array();
+            $validate = new Validate();
+            $validation = $validate -> check(array(
+                'ProductName' => array(
+                    'required' => true,
+                ),
+                'ProductDescription' => array(
+                    'required' => true,
+                ),
+            ));
+            $validation->checkLogin();
+            if(!$validation->passed())
             {
-                $product->AddANewProduct();
+                $errorsarray = $validation->errors();
+                foreach($errorsarray as $err)
+                {
+                    array_push($results["Errors"], $err);
+                }                
+            }
+            else
+            {
+                $product = new Product();
+                $product -> SetName(Input::get("AddANewProduct"));
+                $product -> SetDescription(Input::get("ProductDescription"));
+                $product -> SetAddedBy (Session::get("UserId"));
+                try
+                {
+                    $product->AddANewProduct();
 
+                }
+                catch(Exception $ex)
+                {
+                    array_push($results["Errors"], $ex->getMessage());
+                }
             }
-            catch(Exception $ex)
+            if(!empty($results["Errors"]))
             {
-                die($ex->getMessage());
+                echo json_encode($results);
             }
+
         break;
         case "AddANewPriceStock":
             $pricestock = new PriceStock();
@@ -219,8 +247,9 @@
                   $user["LocationId"] = $response["LocationId"];
                   $user["UserId"] = $response["UserId"];
                   $user["IsManager"] = $response["IsManager"];
-                  $_SESSION["UserId"] =  $user["UserId"];
-                  $_SESSION["IsManager"] =  $user["IsManager"];
+                  Session::put("UserId",$user["UserId"]);
+                  Session::put("LocationId",$user["LocationId"]);
+                  Session::put("IsManager",$user["IsManager"]);
                   echo json_encode($user);
     
             }
@@ -231,10 +260,13 @@
             }
         break;
         case "LogOut":
-           session_destroy();
+           Session::clean();
         break;
         case "SessionTest":
-            echo $_SESSION["UserId"];
+            if(Session::exists("UserId"))
+                echo Session::get("UserId");
+            else
+                echo "No session";
         break;
         
     

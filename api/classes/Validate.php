@@ -6,10 +6,10 @@ class Validate{
     public function __construct(){
         $this->_db = DB::getInstance();
     }
-    public function check($source, $items = array()){
+    public function check($items = array()){
         foreach($items as $item => $rules){
             foreach($rules as $rule => $rule_value){
-                $value = trim($source[$item]);
+                $value = trim(Input::get($item));
                 $item = escape($item);
                 if($rule === 'required' && empty($value)){
                     $this->addError("{$item} is required");
@@ -28,7 +28,7 @@ class Validate{
 
                         break;
                         case 'matches':
-                            if($value != $source[$rule_value]){
+                            if($value != Input::get($rule_value)){
                                 $this->addError("{$rule_value} must mach {$item}");
                             }
                         break;
@@ -50,6 +50,15 @@ class Validate{
     }
     private function addError($error){
         $this->_errors[] = $error;
+    }
+    public function checkLogin()
+    {
+        if(!Session::exists("UserId"))
+        {
+            $this->addError("You are not authorized to do that.");
+            $this->_passed = false;
+        }
+
     }
     public function errors(){
         return $this->_errors;
