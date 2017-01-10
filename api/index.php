@@ -65,27 +65,67 @@
 
         break;
         case "AddANewPriceStock":
-            $pricestock = new PriceStock();
-            if(Input::get("location_id") != "")
+            $results = array();
+            $results["Errors"] = array();
+            $validate = new Validate();
+            $validation = $validate -> check(array(
+                'Price' => array(
+                    'required' => true,
+                ),
+                'Stock' => array(
+                    'required' => true,
+                ),
+                'product_id' => array(
+                    'required' => true,
+                ) 
+            ));
+            $validation->checkLogin();
+            if(!$validation->passed())
             {
-                $pricestock->SetLocationId(Input::get("location_id"));
+                $errorsarray = $validation->errors();
+                foreach($errorsarray as $err)
+                {
+                    array_push($results["Errors"], $err);
+                }                
             }
             else
             {
-                $pricestock->SetLocationId("1");
-            }
-            $pricestock->SetProductId(Input::get("product_id"));
-            $pricestock->SetPrice(Input::get("Price"));
-            $pricestock->SetStock(Input::get("Stock"));
-            try
-            {
-                $pricestock->AddANewPriceStock();
+                $pricestock = new PriceStock();
+                if(Session::get("IsManager") == 1)
+                {
+                    if(Input::get("location_id") == "" || !Controls::CheckLocationAccess(Input::get("location_id")))
+                    {
+                        array_push($results["Errors"], "Invalid Location");
+                        echo json_encode($results);
+                        break;             
+                    }
+                    else
+                    {
+                        $pricestock->SetLocationId(Input::get("location_id"));
+                    }
+                }
+                else
+                {
+                    $pricestock->SetLocationId(Session::get("LocationId"));
+                }
+                $pricestock->SetProductId(Input::get("product_id"));
+                $pricestock->SetPrice(Input::get("Price"));
+                $pricestock->SetStock(Input::get("Stock"));
+                try
+                {
+                    $pricestock->AddANewPriceStock();
 
+                }
+                catch(Exception $ex)
+                {
+                    array_push($results["Errors"], $ex->getMessage());
+                }
             }
-            catch(Exception $ex)
+            if(!empty($results["Errors"]))
             {
-                die($ex->getMessage());
-            }
+                echo json_encode($results);
+            }        
+            
         break;
                 
         
@@ -128,6 +168,7 @@
             $user->SetUsername(Input::get("Username"));
             $user->SetPassword(md5(Input::get("Password")));
             $user->SetLocationId(Input::get("LocationId"));
+            $user->SetCompanyId(Input::get("CompanyId"));
             if(Input::get("IsManager") == "1")
             {
                 $user->SetIsManager(Input::get("IsManager"));
@@ -246,10 +287,12 @@
                   $user["Username"] = $response["Username"];
                   $user["LocationId"] = $response["LocationId"];
                   $user["UserId"] = $response["UserId"];
+                  $user["CompanyId"] = $response["CompanyId"];
                   $user["IsManager"] = $response["IsManager"];
                   Session::put("UserId",$user["UserId"]);
                   Session::put("LocationId",$user["LocationId"]);
                   Session::put("IsManager",$user["IsManager"]);
+                  Session::put("CompanyId",$user["CompanyId"]);
                   echo json_encode($user);
     
             }

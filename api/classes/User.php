@@ -6,6 +6,7 @@
         private $_name;
         private $_enterdate;
         private $_location_id;
+        private $_company_id;
         private $_is_manager;
         private $_db;
         public function __construct()
@@ -36,6 +37,10 @@
         {
             $this->_location_id = $location_id; 
         }
+        public function SetCompanyId($company_id = null)
+        {
+            $this->_company_id = $company_id; 
+        }
         public function SetIsManager($is_manager = null)
         {
             $this->_is_manager = $is_manager; 
@@ -64,6 +69,10 @@
         {
             return $this->_location_id; 
         }
+        public function GetCompanyId()
+        {
+            return $this->_company_id; 
+        }
         public function GetIsManager()
         {
             return $this->_is_manager; 
@@ -76,6 +85,7 @@
             $this->SetPassword($DBArray->Password);
             $this->SetEnterDate($DBArray->UserEnterDate);
             $this->SetLocationId($DBArray->LocationId);
+            $this->SetCompanyId($DBArray->CompanyId);
             $this->SetIsManager($DBArray->IsManager);
         }
         public function UserToArray()
@@ -87,6 +97,7 @@
             $ret_arr["Password"] = $this->GetPassword();
             $ret_arr["UserEnterDate"] = $this->GetEnterDate();
             $ret_arr["LocationId"] = $this->GetLocationId();
+            $ret_arr["CompanyId"] = $this->GetCompanyId();
             $ret_arr["IsManager"] = $this->GetIsManager();
             return $ret_arr;
         }
@@ -117,6 +128,7 @@
                 }
             }
     }
+   
 
 }
 ?>

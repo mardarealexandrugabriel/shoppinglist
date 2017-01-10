@@ -173,6 +173,29 @@ class Controls{
         return $generalarray;
         
     }
+    public static function CheckLocationAccess($LocationId)
+    {
+        $ok = 0;
+        if(Session::get("IsManager")=="1")
+        {
+            
+            $Locations = self::GetLocatiosListByCompanyId(Session::get("CompanyId"));
+            foreach($Locations as $Location)
+            {
+                if($LocationId == $Location["LocationId"])
+                    $ok = 1;
+            }
+            if($ok == 1)
+                return true;
+        }
+        else
+        {
+            if(Session::get("LocationId") == $LocationId)
+                return true;
+        }
+        return false;
+       
+    }
     public static function Login($Username, $Password)
     {
         $db = DB::getInstance()->get('users', array("Username","=", $Username));
