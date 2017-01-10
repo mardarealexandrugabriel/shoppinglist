@@ -193,8 +193,11 @@ class Controls{
             if(Session::get("LocationId") == $LocationId)
                 return true;
         }
-        return false;
-       
+        return false;       
+    }
+    public static function CheckManager()
+    {
+        return Session::get("IsManager") == "1" ? true : false;        
     }
     public static function Login($Username, $Password)
     {

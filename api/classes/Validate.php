@@ -55,10 +55,18 @@ class Validate{
     {
         if(!Session::exists("UserId"))
         {
-            $this->addError("You are not authorized to do that.");
+            $this->addError("You are not authorized to do that. Please Login!");
             $this->_passed = false;
         }
 
+    }
+    public function checkManager()
+    {
+        if(!Controls::CheckManager())
+        {
+            $this->addError("You are not a Manager.");
+            $this->_passed = false;
+        }
     }
     public function errors(){
         return $this->_errors;

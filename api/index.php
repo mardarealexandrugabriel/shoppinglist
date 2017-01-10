@@ -146,20 +146,54 @@
         
                 
         case "AddANewLocation":
-            $location = new Location();
-            $location -> SetCompanyId("1");
-            $location -> SetAddress(Input::get("LocationAdress"));
-            $location -> SetName(Input::get("LocationName"));
-            $location -> SetLat(Input::get("LocationLat"));
-            $location -> SetLng(Input::get("LocationLng"));
-            try
+            $results = array();
+            $results["Errors"] = array();
+            $validate = new Validate();
+            $validation = $validate -> check(array(
+                'LocationAdress' => array(
+                    'required' => true,
+                ),
+                'LocationName' => array(
+                    'required' => true,
+                ),
+                'LocationLat' => array(
+                    'required' => true,
+                ),
+                'LocationLng' => array(
+                    'required' => true,
+                )  
+            ));
+            $validation->checkLogin();
+            $validation->checkManager();
+            if(!$validation->passed())
             {
-                $location -> AddANewLocation();
+                $errorsarray = $validation->errors();
+                foreach($errorsarray as $err)
+                {
+                    array_push($results["Errors"], $err);
+                }                
             }
-            catch(Exception $ex)
+            else
             {
-                die($ex->getMessage());
+                $location = new Location();
+                $location -> SetCompanyId(Session::get("CompanyId"));
+                $location -> SetAddress(Input::get("LocationAdress"));
+                $location -> SetName(Input::get("LocationName"));
+                $location -> SetLat(Input::get("LocationLat"));
+                $location -> SetLng(Input::get("LocationLng"));
+                try
+                {
+                    $location -> AddANewLocation();
+                }
+                catch(Exception $ex)
+                {
+                    array_push($results["Errors"], $ex->getMessage());
+                }
             }
+             if(!empty($results["Errors"]))
+            {
+                echo json_encode($results);
+            }   
         break;
 
         case "AddANewUser":

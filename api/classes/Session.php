@@ -11,7 +11,10 @@
         }
         public static function get($name)
         {
-            return $_SESSION[$name];
+            if (self::exists($name))
+                return $_SESSION[$name];
+            else
+                return "";
         }
         public static function clean()
         {
