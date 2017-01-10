@@ -335,37 +335,79 @@
             }
         break;
         case "AddAutomaticPriceStock":
+            $results = array();
+            $results["Errors"] = array();
             $t = time();
             $t = date("Y-m-d h-i-s",$t);
             $t = str_replace("-","",$t);
             $t = str_replace(" ","",$t);
             $UploadFileName = $t.".json";
             $UploadFilePath = "temp/".$UploadFileName;
-            move_uploaded_file($_FILES["H_VehicleKeyFile"]["tmp_name"], $UploadFilePath);
-            $structure = file_get_contents($UploadFilePath);
-            $data = json_decode($structure, true);
-            foreach($data as $lkey => $location)
+            if(!Session::exists("UserId"))
             {
-                foreach($location as $pkey => $product)
-                {
-                    $pricestock = new PriceStock();
-                    $pricestock->SetLocationId($lkey);
-                    $pricestock->SetProductId($pkey);
-                    $pricestock->SetPrice($product["Price"]);
-                    $pricestock->SetStock($product["Stock"]);
-                    try
-                    {
-                       $pricestock->AddANewPriceStock();
-                       //print_r($pricestock);
-                    }
-                    catch(Exception $ex)
-                    {
-                        unlink($UploadFilePath);
-                        die($ex->getMessage());
-                    }
-                }
+                array_push($results["Errors"], "You are not authorized to do that, please Login");
             }
-            unlink($UploadFilePath);
+            else
+            {
+                if(!Controls::checkFile("JsonFile"))
+                {
+                    array_push($results["Errors"], "Json File is missing");
+                }
+                else
+                {
+                    move_uploaded_file($_FILES["JsonFile"]["tmp_name"], $UploadFilePath);
+                    $structure = file_get_contents($UploadFilePath);
+                    $data = json_decode($structure, true);
+                    if($data == null)
+                    {
+                        array_push($results["Errors"], "Json File is not in a correct format.");
+                    }
+                    else
+                    {
+                        foreach($data as $lkey => $location)
+                        {
+                            if(Session::get("IsManager") == 1)
+                            {
+                                if(!Controls::CheckLocationAccess($lkey))
+                                {
+                                    array_push($results["Errors"], "Invalid Location");
+                                    echo json_encode($results);
+                                    unlink($UploadFilePath);
+                                    die();             
+                                }
+                            }
+                            else
+                            {
+                                $lkey==Session::get("LocationId");
+                            }
+                            foreach($location as $pkey => $product)
+                            {
+                                $pricestock = new PriceStock();
+                                $pricestock->SetLocationId($lkey);
+                                $pricestock->SetProductId($pkey);
+                                $pricestock->SetPrice($product["Price"]);
+                                $pricestock->SetStock($product["Stock"]);
+                                try
+                                {
+                                    $pricestock->AddANewPriceStock();
+                                }
+                                catch(Exception $ex)
+                                {
+                                    unlink($UploadFilePath);
+                                    array_push($results["Errors"], $ex->getMessage());
+                                }
+                            }
+                        }
+                    }
+                    unlink($UploadFilePath);
+                }
+
+            }
+            if(!empty($results["Errors"]))
+            {
+                echo json_encode($results);
+            } 
+            
         break;
         case "LogIn":
             $results = array();

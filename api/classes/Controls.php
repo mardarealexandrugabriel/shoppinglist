@@ -199,6 +199,12 @@ class Controls{
     {
         return Session::get("IsManager") == "1" ? true : false;        
     }
+    public static function checkFile($item){
+        if(!isset($_FILES[$item]['tmp_name']) || !file_exists($_FILES[$item]['tmp_name']) || !is_uploaded_file($_FILES[$item]['tmp_name'])) {
+            return false;
+        }
+        return true;
+    }
     public static function Login($Username, $Password)
     {
         $db = DB::getInstance()->get('users', array("Username","=", $Username));
