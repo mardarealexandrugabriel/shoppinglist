@@ -220,29 +220,64 @@
         break;
 
         case "AddANewUser":
-            $user = new User();
-            $user->SetName(Input::get("Name"));
-            $user->SetUsername(Input::get("Username"));
-            $user->SetPassword(md5(Input::get("Password")));
-            $user->SetLocationId(Input::get("LocationId"));
-            $user->SetCompanyId(Input::get("CompanyId"));
-            if(Input::get("IsManager") == "1")
+            $results = array();
+            $results["Errors"] = array();
+            $validate = new Validate();
+            $validation = $validate -> check(array(
+                'Name' => array(
+                    'required' => true,
+                ),
+                'Username' => array(
+                    'required' => true,
+                ),
+                'Password' => array(
+                    'required' => true,
+                ),
+                'LocationId' => array(
+                    'required' => true,
+                ),
+                'CompanyId' => array(
+                    'required' => true,
+                )    
+            ));
+            if(!$validation->passed())
             {
-                $user->SetIsManager(Input::get("IsManager"));
-                $user->SetLocationId("0");
+                $errorsarray = $validation->errors();
+                foreach($errorsarray as $err)
+                {
+                    array_push($results["Errors"], $err);
+                }                
             }
             else
             {
-                $user->SetIsManager("0");
+                $user = new User();
+                $user->SetName(Input::get("Name"));
+                $user->SetUsername(Input::get("Username"));
+                $user->SetPassword(md5(Input::get("Password")));
+                $user->SetLocationId(Input::get("LocationId"));
+                $user->SetCompanyId(Input::get("CompanyId"));
+                if(Input::get("IsManager") == "1")
+                {
+                    $user->SetIsManager(Input::get("IsManager"));
+                    $user->SetLocationId("0");
+                }
+                else
+                {
+                    $user->SetIsManager("0");
+                }
+                try
+                {
+                    $user->AddANewUser();
+                }
+                catch(Exception $ex)
+                {
+                    array_push($results["Errors"], $ex->getMessage());
+                }  
             }
-            try
+            if(!empty($results["Errors"]))
             {
-                  $user->AddANewUser();
-            }
-            catch(Exception $ex)
-            {
-                die($ex->getMessage());
-            }
+                echo json_encode($results);
+            } 
         break;
         case "GetLocationsListByCompanyId":
             $locationlist = array();
@@ -333,31 +368,61 @@
             unlink($UploadFilePath);
         break;
         case "Login":
-            $response = "";
-            $Username = Input::get("Username");
-            $Password = Input::get("Password");
-            try
+            $results = array();
+            $results["Errors"] = array();
+            $results["User"] = array();
+            $validate = new Validate();
+            $validation = $validate -> check(array(
+                'Username' => array(
+                    'required' => true,
+                ),
+                'Password' => array(
+                    'required' => true,
+                )
+            ));
+            if(!$validation->passed())
             {
-                  $response = Controls::Login($Username, $Password);
-                  $user = array();
-                  $user["Name"] = $response["UName"];
-                  $user["Username"] = $response["Username"];
-                  $user["LocationId"] = $response["LocationId"];
-                  $user["UserId"] = $response["UserId"];
-                  $user["CompanyId"] = $response["CompanyId"];
-                  $user["IsManager"] = $response["IsManager"];
-                  Session::put("UserId",$user["UserId"]);
-                  Session::put("LocationId",$user["LocationId"]);
-                  Session::put("IsManager",$user["IsManager"]);
-                  Session::put("CompanyId",$user["CompanyId"]);
-                  echo json_encode($user);
+                $errorsarray = $validation->errors();
+                foreach($errorsarray as $err)
+                {
+                    array_push($results["Errors"], $err);
+                }                
+            }
+            else
+            {
+                $response = "";
+                $Username = Input::get("Username");
+                $Password = Input::get("Password");
+                try
+                {
+                    $response = Controls::Login($Username, $Password);
+                    $user = array();
+                    $user["Name"] = $response["UName"];
+                    $user["Username"] = $response["Username"];
+                    $user["LocationId"] = $response["LocationId"];
+                    $user["UserId"] = $response["UserId"];
+                    $user["CompanyId"] = $response["CompanyId"];
+                    $user["IsManager"] = $response["IsManager"];
+                    Session::put("UserId",$user["UserId"]);
+                    Session::put("LocationId",$user["LocationId"]);
+                    Session::put("IsManager",$user["IsManager"]);
+                    Session::put("CompanyId",$user["CompanyId"]);
+                    array_push($results["User"], $user);
+                    unset($results["Errors"]);
+                    echo json_encode($results);
     
+                }
+                catch(Exception $ex)
+                {
+                    session_destroy();
+                    array_push($results["Errors"], $ex->getMessage());
+                }  
             }
-            catch(Exception $ex)
+            if(!empty($results["Errors"]))
             {
-                session_destroy();
-                die($ex->getMessage());
-            }
+                unset($results["User"]);
+                echo json_encode($results);
+            }  
         break;
         case "LogOut":
            Session::clean();
