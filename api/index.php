@@ -367,7 +367,7 @@
             }
             unlink($UploadFilePath);
         break;
-        case "Login":
+        case "LogIn":
             $results = array();
             $results["Errors"] = array();
             $results["User"] = array();
