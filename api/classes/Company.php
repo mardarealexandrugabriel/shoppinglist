@@ -57,7 +57,7 @@ class Company{
         else
         {
             $this->_db = DB::getInstance();
-            $this->_db->get('companies', array("ComapnyUsername", "=", $this->GetUserName()));
+            $this->_db->get('companies', array("CompanyName", "=", $this->GetName()));
             if($this->_db->count() != 0)
             {
                 throw new Exception("Company with that username already exists");
@@ -70,6 +70,7 @@ class Company{
                 {
                     throw new Exception("There was a problem inserting the company");
                 }
+                
             }
         }
     }

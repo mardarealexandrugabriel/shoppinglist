@@ -130,18 +130,41 @@
                 
         
         case "AddANewCompany":
-            $company = new Company();
-            $company -> SetName("Companie1csfromsite");
-            $company -> SetUsername("Username1");
-            $company -> SetPassword(Hash::make("parola"));
-            try
+            $results = array();
+            $results["Errors"] = array();
+            $validate = new Validate();
+            $validation = $validate -> check(array(
+                'CompanyName' => array(
+                    'required' => true,
+                )
+            ));
+            if(!$validation->passed())
             {
-                $company -> AddANewCompany();
+                $errorsarray = $validation->errors();
+                foreach($errorsarray as $err)
+                {
+                    array_push($results["Errors"], $err);
+                }                
             }
-            catch(Exception $ex)
+            else
             {
-                die($ex->getMessage());
+                $company = new Company();
+                $company -> SetName(Input::get("CompanyName"));
+                try
+                {
+                    $company -> AddANewCompany();
+                }
+                catch(Exception $ex)
+                {
+                    array_push($results["Errors"], $ex->getMessage());
+                }
+
             }
+            if(!empty($results["Errors"]))
+            {
+                echo json_encode($results);
+            }      
+            
         break;
         
                 
