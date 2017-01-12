@@ -264,6 +264,7 @@
                 else
                 {
                     $user->SetIsManager("0");
+                    $user->SetCompanyId(Session::get("CompanyId"));
                 }
                 try
                 {
