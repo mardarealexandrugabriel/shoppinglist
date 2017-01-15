@@ -231,5 +231,28 @@ class Controls{
         }
 
     }
+    public static function GetUser($id)
+    {
+        $db = DB::getInstance()->get('users', array("UserId","=", $id));
+        if($db->error())
+        {
+            throw new Exception("There was a problem selecting the user");
+        }
+        else
+        {
+            if(!$db->count())
+            {
+                throw new Exception("No User with that Id");
+            }
+            else
+            {
+                $user = new User();
+                $user->SetAttributesFromDB($db->results()[0]);               
+                return $user->UserToArray();
+                
+            }
+
+        }
+    }
 }
 ?>

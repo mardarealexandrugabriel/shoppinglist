@@ -4,6 +4,27 @@
     $action = Input::get("action");
     header('Content-Type: application/json');
     header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept');
+    
+    if(Input::get("UserId") != '')
+    {
+        $user = array();
+        try
+        {
+            $user = Controls::GetUser(Input::get("UserId"));
+            Session::put("UserId",$user["UserId"]);
+            Session::put("LocationId",$user["LocationId"]);
+            Session::put("IsManager",$user["IsManager"]);
+            Session::put("CompanyId",$user["CompanyId"]);
+
+        }
+        catch(Exception $ex)
+        {
+            die($ex->getMessage());
+        }
+    }
+
+
     error_reporting(E_ALL);
     switch($action)
     {
