@@ -66,7 +66,7 @@
             else
             {
                 $product = new Product();
-                $product -> SetName(Input::get("AddANewProduct"));
+                $product -> SetName(Input::get("ProductName"));
                 $product -> SetDescription(Input::get("ProductDescription"));
                 $product -> SetAddedBy (Session::get("UserId"));
                 try
