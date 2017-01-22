@@ -37,7 +37,9 @@
             }
             catch(Exception $ex)
             {
-                die($ex->getMessage());
+                $x = array();
+                print(json_encode($x));
+                die();
             }
                 echo json_encode($productlist);
         break;
