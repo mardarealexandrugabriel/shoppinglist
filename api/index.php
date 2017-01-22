@@ -365,21 +365,20 @@
             $t = date("Y-m-d h-i-s",$t);
             $t = str_replace("-","",$t);
             $t = str_replace(" ","",$t);
-            $UploadFileName = $t.".json";
+            $UploadFileName = "fisier.json";
             $UploadFilePath = "temp/".$UploadFileName;
             if(!Session::exists("UserId"))
             {
-                array_push($results["Errors"], "You are not authorized to do that, please Login");
+                array_push($results["Errors"], "You are not authorized to do that, plessase Login");
             }
             else
             {
-                if(!Controls::checkFile("JsonFile"))
+                if(!Controls::checkFile("JsonFile") && 0)
                 {
                     array_push($results["Errors"], "Json File is missing");
                 }
                 else
                 {
-                    move_uploaded_file($_FILES["JsonFile"]["tmp_name"], $UploadFilePath);
                     $structure = file_get_contents($UploadFilePath);
                     $data = json_decode($structure, true);
                     if($data == null)
@@ -396,7 +395,6 @@
                                 {
                                     array_push($results["Errors"], "Invalid Location");
                                     echo json_encode($results);
-                                    unlink($UploadFilePath);
                                     die();             
                                 }
                             }
@@ -417,13 +415,13 @@
                                 }
                                 catch(Exception $ex)
                                 {
-                                    unlink($UploadFilePath);
+            
                                     array_push($results["Errors"], $ex->getMessage());
                                 }
                             }
                         }
                     }
-                    unlink($UploadFilePath);
+                  
                 }
 
             }
